@@ -3,86 +3,84 @@ const Schema = mongoose.Schema;
 
 
 const UserModel = new Schema({
-    personalInfo : {
-        email: { type: String, required: true, unique: true},
+    personalInfo: {
+        email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        userType: { type: String, enum: ['student', 'staff', 'independentResearcher'], default: 'independentResearcher' },
+        userType: { type: String, enum: ['student', 'staff', 'independentResearcher'], required: true },
         fname: { type: String, required: true },
         lname: { type: String, required: true },
-        dob: { type: Date, required: false},
-        address: { type: String, required: false},
-        about: { type: String, required: false},
-        phone: { type: String, required: false},
-        createdAt: { type: Date, default: 
-Date.now
- },
-        updatedAt: { type: Date, default: 
-Date.now
- }
+        dob: { type: Date, required: false },
+        address: { type: String, required: false },
+        phone: { type: String, required: false },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: {type: Date, default: Date.now }
     },
-    institution : {
-        institutionName : { type: String, require: true },
-        department : { type: String, require: true },
-        course : { type: String, require: true },
-        type : { type: String,enum: ['undergraduate', 'msc', 'phd','pgde','nce','ond','hnd','others'], require: true }
+    institution: {
+        name: { type: String, require: true },
+        type: { type: String, enum: ['undergraduate', 'msc', 'phd', 'pgde', 'nce', 'ond', 'hnd', 'others'], require: true }
     },
-    research : {
+    research: [
+        {
             title: { type: String, required: true },
             year: { type: Date, required: true },
-            /*authors: [ 
+            authors: [ 
                 {
                     email: { type: String, required: true },
                     name: { type: String, required: false }
                 }
-            ],*/
-            collaborators:[
-                {
-                    name: {type: String, required: false},
-                    email: {type: String, required: false}
-                }
             ],
-            References: [ 
+            pages: [
                 {
-                    author:{type: String, required: false},
-                    research:{type: String, required: false},
-                    caption:{type: String, required: true}
+                    number:{type: Number, required: true }
                 }
             ]
-    },
-    analytics : {
+        }
+    ],
+    analytics: {
         mentions: [
             {
-                researcher: { type: String, required: true },
-                research: { type: String, required: true},
-                dateMentioned: {type: Date, required: true} 
+                researcherEmail: { type: String, required: true },
+                research: { type: String, required: true },
+                dateMentioned: { type: Date, required: true }
             }
         ],
         readingHistory: [
             {
-                research: { type: String, required: true },
-                currentPage : { type: String, required: true },
-                totalPages: {type: Number, required: true},
-                startAt: {type: Date, required: true},
-                stoppedAt: {type: Date, required: true},
+                researchId: { type: String, required: true },
+                totalPages: { type: Number, required: true },
+                timing: [
+                    {
+                        currentPage: { type: Number, required: true },
+                        startAt: { type: Date, required: true },
+                        stoppedAt: { type: Date, required: true },
+                    }
+                ]
             }
-        ]
+        ],
+        searchHistory: [
+            {
+                searchQuery: { type: String, required: true },
+                searchDate: { type: Date, required: true }
+            }
+        ],
     },
-
-    searchHistory: [
+    announceResearch:[
         {
-            searchQuery: {type: String, required: true},
-            /*searchStatus: {type: String, required: true, enum: ["true","false"]},*/
-            searchDate: {type: Date, required: true}
+            title: { type: String, required: true },
+            description: { type: String, required: true },
+            isOpen: {type: Boolean, default: true, required: true},
+            amount: { type: Number, required:true},
+            startDate: { type: Date, required: true },
+            endDate: { type: Date, required: true },
+            researchApllicant:[
+                {
+                    name: { type: String, required: false },
+                    email: { type: String, required: false },
+                    isApproved:{type: Boolean, default: true, required: false}
+                }
+            ]
         }
-    ],
-    //Chat Schema Data privacy Issue to be disussed.
-    /*chats: [
-        {
-            sender: {type:String, required: true},
-            message: {type: String, required: true},
-            timeSent: {type: Date, required:true}
-        }
-    ]*/
+    ]
 });
 
 module.exports = mongoose.model('UserModel', UserModel);
