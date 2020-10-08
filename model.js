@@ -23,6 +23,8 @@ const UserModel = new Schema({
         {
             title: { type: String, required: true },
             year: { type: Date, required: true },
+            category: { type: String, required: true, enum: ['Engineering', 'Science', 'Arts'] },
+            subcategory: { type: String },
             authors: [ 
                 {
                     email: { type: String, required: true },
